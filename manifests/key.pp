@@ -22,15 +22,17 @@ define apt::key (
 
 
       exec { "import gpg key ${name}":
+        path    => '/usr/bin:/bin',
         command => "${thekey} | apt-key add -",
-        unless => "apt-key list | grep -Fqe '${name}'",
-        before => Exec['apt-get_update'],
-        notify => Exec['apt-get_update'],
+        unless  => "apt-key list | grep -Fqe '${name}'",
+        before  => Exec['apt-get_update'],
+        notify  => Exec['apt-get_update'],
       }
     }
 
     absent: {
       exec {"apt-key del ${name}":
+        path    => '/usr/bin:/bin',
         onlyif => "apt-key list | grep -Fqe '${name}'",
       }
     }
